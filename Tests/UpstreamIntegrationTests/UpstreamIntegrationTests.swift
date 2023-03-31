@@ -17,6 +17,164 @@ import AEPServices
 import Foundation
 import XCTest
 
+enum JSON: Equatable {
+    case object([String:JSON])
+    case array([JSON])
+    case string(String)
+    case bool(Bool)
+    case number(Double)
+    case null
+    
+    static func ==(lhs: JSON, rhs: JSON) -> Bool {
+        switch lhs {
+        case .object(let leftDictionary):
+            guard let rightDictionary: [String: JSON] = rhs.value() else {
+                XCTFail(#"""
+                        rhs is NOT [String: Any] and is not equal to lhs
+
+                        lhs: \#(leftDictionary)
+                        
+                        rhs: \#(rhs)
+                        """#)
+                return false
+            }
+            if rightDictionary.count != leftDictionary.count {
+                XCTFail(#"""
+                        lhs and rhs (type: [String: Any]) counts do not match.
+                        lhs count: \#(leftDictionary.count)
+                        rhs count: \#(rightDictionary.count)
+                        
+                        lhs: \#(leftDictionary)
+                        
+                        rhs: \#(rightDictionary)
+                        """#)
+                return false
+            }
+            for (key, value) in leftDictionary {
+                print("KEY: \(key)")
+                XCTAssertEqual(value, rightDictionary[key])
+            }
+        case .array(let leftArray):
+            guard let rightArray: [JSON] = rhs.value() else {
+                XCTFail(#"""
+                        rhs is NOT [Any] and is not equal to lhs
+
+                        lhs: \#(leftArray)
+                        
+                        rhs: \#(rhs)
+                        """#)
+                return false
+                
+            }
+            if rightArray.count != leftArray.count {
+                XCTFail(#"""
+                        lhs and rhs (type: [String]) counts do not match.
+                        lhs count: \#(leftArray.count)
+                        rhs count: \#(rightArray.count)
+                        
+                        lhs: \#(leftArray)
+                        
+                        rhs: \#(rightArray)
+                        """#)
+                return false
+            }
+            for index in leftArray.indices {
+                print("INDEX: \(index)")
+                XCTAssertEqual(leftArray[index], rightArray[index])
+//                if array[index] != rhsArray[index] {
+//                    XCTFail("\(array[index]) != \(rhsArray[index])")
+//                    return false
+//                }
+            }
+        case .string(let string):
+            XCTAssertEqual(string, rhs.value() as String?, "original rhs: \(rhs)")
+//            XCTAssertEqual(lhs, rhs.value() as String?)
+//            return string == rhs.value() as String?
+        case .bool(let bool):
+            XCTAssertEqual(bool, rhs.value() as Bool?, "original rhs: \(rhs)")
+//            return bool == rhs.value() as Bool?
+        case .number(let number):
+            XCTAssertEqual(number, rhs.value() as Double?, "original rhs: \(rhs)")
+//            return number == rhs.value() as Double?
+        case .null:
+            guard case .null = rhs else {
+                XCTFail(#"""
+                        rhs is NOT nil and is not equal to lhs
+
+                        lhs: \#(lhs)
+                        
+                        rhs: \#(rhs)
+                        """#)
+                return false
+            }
+        }
+        return true
+    }
+    
+    func value<T>() -> T? {
+        switch self {
+        case .object(let value):
+            return value as? T
+        case .array(let value):
+            return value as? T
+        case .bool(let value):
+            return value as? T
+        case .number(let value):
+            return value as? T
+        case .string(let value):
+            return value as? T
+        case .null:
+            return nil
+        }
+    }
+}
+
+extension JSON : Codable {
+    
+    init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        
+        if let object = try? container.decode([String: JSON].self) {
+            self = .object(object)
+        } else if let array = try? container.decode([JSON].self) {
+            self = .array(array)
+        } else if let string = try? container.decode(String.self) {
+            self = .string(string)
+        } else if let bool = try? container.decode(Bool.self) {
+            self = .bool(bool)
+        } else if let number = try? container.decode(Double.self) {
+            self = .number(number)
+        } else if container.decodeNil() {
+            self = .null
+        } else {
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Invalid JSON value."
+            )
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.singleValueContainer()
+        
+        switch self {
+        case let .object(object):
+            try container.encode(object)
+        case let .array(array):
+            try container.encode(array)
+        case let .string(string):
+            try container.encode(string)
+        case let .bool(bool):
+            try container.encode(bool)
+        case let .number(number):
+            try container.encode(number)
+        case .null:
+            try container.encodeNil()
+        }
+    }
+}
+
 class NetworkTestingDelegate: NetworkRequestDelegate {
     var testCaseCompletion: (HttpConnection) -> ()
     func handleNetworkResponse(httpConnection: AEPServices.HttpConnection) {
@@ -107,11 +265,102 @@ class UpstreamIntegrationTests: XCTestCase {
         }
         return jsonDictionary
     }
+    
+    func testJSONComparisonSystem() {
+        let multiline3 = #"""
+            {
+              "assignees": null,
+              "author": {
+                "id": "MDQ6VXNlcjE5OTA4MDY=",
+                "is_bot": false,
+                "login": "G00fY2",
+                "name": "Thomas Wirth"
+              },
+              "body": "Looks like a BoM was added for the Adobe dependencies: #402\r\n\r\nAny ETA when this will be available on [MavenCentral](https://central.sonatype.com/namespace/com.adobe.marketing.mobile)?",
+              "closed": false,
+              "closedAt": null,
+              "comments": [
+                {
+                  "id": "IC_kwDOG1EAjc5XypUn",
+                  "author": {
+                    "login": "yangyansong-adbe"
+                  },
+                  "authorAssociation": "MEMBER",
+                  "body": "@G00fY2 We're still finalizing something internally. We don't have an ETA at this point in time, but the release should be available very soon. I will keep you updated. \r\n\r\nThanks,\r\nYansong",
+                  "createdAt": "2023-03-16T23:30:46Z",
+                  "includesCreatedEdit": false,
+                  "isMinimized": false,
+                  "minimizedReason": "",
+                  "reactionGroups": [],
+                  "url": "https://github.com/adobe/aepsdk-core-android/issues/412#issuecomment-1472894247",
+                  "viewerDidAuthor": false
+                }
+              ],
+              "createdAt": "2023-03-16T13:11:19Z",
+              "id": "I_kwDOG1EAjc5hAOEQ",
+              "labels": [],
+              "milestone": null,
+              "number": 412,
+              "reactionGroups": [],
+              "state": "OPEN",
+              "title": "When will the BoM be available?",
+              "updatedAt": "2023-03-16T23:30:46Z",
+              "url": "https://github.com/adobe/aepsdk-core-android/issues/412"
+            }
+        """#
+
+        let multiline4 = #"""
+          {
+            "assignees": [],
+            "author": {
+              "id": "MDQ6VXNlcjE5OTA4MDY=",
+              "is_bot": 0,
+              "login": "G00fY2",
+              "name": "Thomas Wirth"
+            },
+            "body": "Looks like a BoM was added for the Adobe dependencies: #402\r\n\r\nAny ETA when this will be available on [MavenCentral](https://central.sonatype.com/namespace/com.adobe.marketing.mobile)?",
+            "closed": false,
+            "closedAt": null,
+            "comments": [
+              {
+                "id": "IC_kwDOG1EAjc5XypUn",
+                "author": {
+                  "login": "yangyansong-adbe"
+                },
+                "authorAssociation": "MEMBER",
+                "body": "@G00fY2 We're still finalizing something internally. We don't have an ETA at this point in time, but the release should be available very soon. I will keep you updated. \r\n\r\nThanks,\r\nYansong",
+                "createdAt": "2023-03-16T23:30:46Z",
+                "includesCreatedEdit": false,
+                "isMinimized": false,
+                "minimizedReason": "",
+                "reactionGroups": [],
+                "url": "https://github.com/adobe/aepsdk-core-android/issues/412#issuecomment-1472894247",
+                "viewerDidAuthor": false
+              }
+            ],
+            "createdAt": "2023-03-16T13:11:19Z",
+            "id": "I_kwDOG1EAjc5hAOEQ",
+            "labels": [],
+            "milestone": null,
+            "number": 412,
+            "reactionGroups": [],
+            "state": "OPEN",
+            "title": "When will the BoM be available?",
+            "updatedAt": "2023-03-16T23:30:46Z",
+            "url": "https://githu.com/adobe/aepsdk-core-android/issues/412"
+          }
+        """#
+        
+        let result = try? JSONDecoder().decode(JSON.self, from: multiline3.data(using: .utf8)!)
+        let result2 = try? JSONDecoder().decode(JSON.self, from: multiline4.data(using: .utf8)!)
+
+        XCTAssertEqual(result, result2)
+//        print(result == result2)
+    }
 
     // MARK: sample tests for the FunctionalTest framework usage
     func testSample_AssertUnexpectedEvents() {
         // Register a callback with the functional test network service to receive the HTTPConnection object when it's available
-        
         // Setup
         let edgeRequestContentExpectation = XCTestExpectation(description: "Edge extension request content listener called")
         let networkResponseExpectation = XCTestExpectation(description: "Network request callback called")
@@ -211,3 +460,8 @@ class UpstreamIntegrationTests: XCTestCase {
     }
 }
 
+/// Performs equivalence between two dictionaries using ``NSDictionary`` (ObjC) equivalence
+/// See Apple docs on ``NSDictionary/isEqual(_:)``: https://developer.apple.com/documentation/foundation/nsdictionary/1415445-isequal
+fileprivate func ==(lhs: [String: Any], rhs: [String: Any] ) -> Bool {
+    return NSDictionary(dictionary: lhs).isEqual(to: rhs)
+}
