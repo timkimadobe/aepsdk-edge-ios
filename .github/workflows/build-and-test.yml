@@ -28,11 +28,12 @@ jobs:
         uses: ./.github/actions/setup-action
 
       - name: Preboot iOS Simulator
-        run: xcrun simctl bootstatus booted --timeout 300
-        env:
-          PLATFORM_NAME: iOS
-          DEVICE_NAME: iPhone 15
-          OS_VERSION: 17.2
+        run: |
+          DEVICE_NAME="iPhone 15"
+          OS_VERSION="17.2"
+          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          xcrun simctl boot "$DEVICE_UDID"
+        shell: bash
 
       - name: Run iOS Unit Tests
         run: make unit-test-ios
@@ -48,11 +49,12 @@ jobs:
         uses: ./.github/actions/setup-action
 
       - name: Preboot iOS Simulator
-        run: xcrun simctl bootstatus booted --timeout 300
-        env:
-          PLATFORM_NAME: iOS
-          DEVICE_NAME: iPhone 15
-          OS_VERSION: 17.2
+        run: |
+          DEVICE_NAME="iPhone 15"
+          OS_VERSION="17.2"
+          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          xcrun simctl boot "$DEVICE_UDID"
+        shell: bash
 
       - name: Run iOS Functional Tests
         run: make functional-test-ios
@@ -69,11 +71,12 @@ jobs:
         uses: ./.github/actions/setup-action
 
       - name: Preboot iOS Simulator
-        run: xcrun simctl bootstatus booted --timeout 300
-        env:
-          PLATFORM_NAME: iOS
-          DEVICE_NAME: iPhone 15
-          OS_VERSION: 17.2
+        run: |
+          DEVICE_NAME="iPhone 15"
+          OS_VERSION="17.2"
+          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          xcrun simctl boot "$DEVICE_UDID"
+        shell: bash
 
       - name: Run iOS Integration Tests
         run: make test-integration-upstream
@@ -89,11 +92,12 @@ jobs:
         uses: ./.github/actions/setup-action
 
       - name: Preboot tvOS Simulator
-        run: xcrun simctl bootstatus booted --timeout 300
-        env:
-          PLATFORM_NAME: tvOS
-          DEVICE_NAME: Apple TV
-          OS_VERSION: 17.2
+        run: |
+          DEVICE_NAME="Apple TV"
+          OS_VERSION="17.2"
+          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          xcrun simctl boot "$DEVICE_UDID"
+        shell: bash
 
       - name: Run tvOS Unit Tests
         run: make unit-test-tvos
@@ -109,11 +113,12 @@ jobs:
         uses: ./.github/actions/setup-action
 
       - name: Preboot tvOS Simulator
-        run: xcrun simctl bootstatus booted --timeout 300
-        env:
-          PLATFORM_NAME: tvOS
-          DEVICE_NAME: Apple TV
-          OS_VERSION: 17.2
+        run: |
+          DEVICE_NAME="Apple TV"
+          OS_VERSION="17.2"
+          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          xcrun simctl boot "$DEVICE_UDID"
+        shell: bash
 
       - name: Run tvOS Functional Tests
         run: make functional-test-tvos
