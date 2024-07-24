@@ -10,8 +10,10 @@ runs:
         path: vendor/bundle
         key: gems-${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
 
-    - name: Verify Cocoapods Version
-      run: bundle check || bundle install --path vendor/bundle
+    - name: Configure Bundler Path and Verify Cocoapods Version
+      run: |
+        bundle config set path 'vendor/bundle'
+        bundle check || bundle install
       shell: bash
 
     - name: Save Gemfile Cache
