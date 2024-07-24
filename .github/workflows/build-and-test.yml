@@ -31,7 +31,13 @@ jobs:
         run: |
           DEVICE_NAME="iPhone 15"
           OS_VERSION="17.2"
-          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+          SIMLIST=$(xcrun simctl list -j)
+          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+          if [ -z "$DEVICE_UDID" ]; then
+            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+            exit 1
+          fi
           xcrun simctl boot "$DEVICE_UDID"
         shell: bash
 
@@ -52,7 +58,13 @@ jobs:
         run: |
           DEVICE_NAME="iPhone 15"
           OS_VERSION="17.2"
-          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+          SIMLIST=$(xcrun simctl list -j)
+          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+          if [ -z "$DEVICE_UDID" ]; then
+            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+            exit 1
+          fi
           xcrun simctl boot "$DEVICE_UDID"
         shell: bash
 
@@ -74,7 +86,13 @@ jobs:
         run: |
           DEVICE_NAME="iPhone 15"
           OS_VERSION="17.2"
-          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+          SIMLIST=$(xcrun simctl list -j)
+          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+          if [ -z "$DEVICE_UDID" ]; then
+            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+            exit 1
+          fi
           xcrun simctl boot "$DEVICE_UDID"
         shell: bash
 
@@ -95,7 +113,13 @@ jobs:
         run: |
           DEVICE_NAME="Apple TV"
           OS_VERSION="17.2"
-          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+          SIMLIST=$(xcrun simctl list -j)
+          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+          if [ -z "$DEVICE_UDID" ]; then
+            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+            exit 1
+          fi
           xcrun simctl boot "$DEVICE_UDID"
         shell: bash
 
@@ -116,7 +140,13 @@ jobs:
         run: |
           DEVICE_NAME="Apple TV"
           OS_VERSION="17.2"
-          DEVICE_UDID=$(xcrun simctl list devices | grep "$DEVICE_NAME ($OS_VERSION)" | head -1 | awk '{print $NF}' | tr -d '()')
+          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+          SIMLIST=$(xcrun simctl list -j)
+          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+          if [ -z "$DEVICE_UDID" ]; then
+            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+            exit 1
+          fi
           xcrun simctl boot "$DEVICE_UDID"
         shell: bash
 
