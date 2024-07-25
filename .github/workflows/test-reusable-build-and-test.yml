@@ -1,0 +1,12 @@
+name: Build and Test (iOS)
+
+on:
+  pull_request:
+
+jobs:
+  call-reusable-workflow:
+    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-reusable-build-and-test.yml@ios-reusable-workflows
+    with:
+      device_name: "iPhone 15"
+      os_version: "17.2"
+      github_ref: ${{ github.ref }}

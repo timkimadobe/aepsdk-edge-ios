@@ -1,171 +1,171 @@
-name: Build and Test (iOS)
+# name: Build and Test (iOS)
 
-on:
-  pull_request:
+# on:
+#   pull_request:
 
-jobs:
-  validate-code:
-    runs-on: macos-latest
+# jobs:
+#   validate-code:
+#     runs-on: macos-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Lint Source Code
-        run: make lint
+#       - name: Lint Source Code
+#         run: make lint
 
-  test-ios-unit:
-    runs-on: macos-latest
-    needs: validate-code
+#   test-ios-unit:
+#     runs-on: macos-latest
+#     needs: validate-code
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
 
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Preboot iOS Simulator
-        run: |
-          DEVICE_NAME="iPhone 15"
-          OS_VERSION="17.2"
-          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
-          SIMLIST=$(xcrun simctl list -j)
-          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
-          if [ -z "$DEVICE_UDID" ]; then
-            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
-            exit 1
-          fi
-          xcrun simctl boot "$DEVICE_UDID"
-        shell: bash
+#       - name: Preboot iOS Simulator
+#         run: |
+#           DEVICE_NAME="iPhone 15"
+#           OS_VERSION="17.2"
+#           ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+#           SIMLIST=$(xcrun simctl list -j)
+#           DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+#           if [ -z "$DEVICE_UDID" ]; then
+#             echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+#             exit 1
+#           fi
+#           xcrun simctl boot "$DEVICE_UDID"
+#         shell: bash
 
-      - name: Run iOS Unit Tests
-        run: make unit-test-ios
+#       - name: Run iOS Unit Tests
+#         run: make unit-test-ios
 
-  test-ios-functional:
-    runs-on: macos-latest
-    needs: validate-code
+#   test-ios-functional:
+#     runs-on: macos-latest
+#     needs: validate-code
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Preboot iOS Simulator
-        run: |
-          DEVICE_NAME="iPhone 15"
-          OS_VERSION="17.2"
-          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
-          SIMLIST=$(xcrun simctl list -j)
-          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
-          if [ -z "$DEVICE_UDID" ]; then
-            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
-            exit 1
-          fi
-          xcrun simctl boot "$DEVICE_UDID"
-        shell: bash
+#       - name: Preboot iOS Simulator
+#         run: |
+#           DEVICE_NAME="iPhone 15"
+#           OS_VERSION="17.2"
+#           ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+#           SIMLIST=$(xcrun simctl list -j)
+#           DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+#           if [ -z "$DEVICE_UDID" ]; then
+#             echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+#             exit 1
+#           fi
+#           xcrun simctl boot "$DEVICE_UDID"
+#         shell: bash
 
-      - name: Run iOS Functional Tests
-        run: make functional-test-ios
+#       - name: Run iOS Functional Tests
+#         run: make functional-test-ios
 
-  test-ios-integration:
-    runs-on: macos-latest
-    needs: validate-code
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+#   test-ios-integration:
+#     runs-on: macos-latest
+#     needs: validate-code
+#     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Preboot iOS Simulator
-        run: |
-          DEVICE_NAME="iPhone 15"
-          OS_VERSION="17.2"
-          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
-          SIMLIST=$(xcrun simctl list -j)
-          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
-          if [ -z "$DEVICE_UDID" ]; then
-            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
-            exit 1
-          fi
-          xcrun simctl boot "$DEVICE_UDID"
-        shell: bash
+#       - name: Preboot iOS Simulator
+#         run: |
+#           DEVICE_NAME="iPhone 15"
+#           OS_VERSION="17.2"
+#           ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+#           SIMLIST=$(xcrun simctl list -j)
+#           DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.iOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+#           if [ -z "$DEVICE_UDID" ]; then
+#             echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+#             exit 1
+#           fi
+#           xcrun simctl boot "$DEVICE_UDID"
+#         shell: bash
 
-      - name: Run iOS Integration Tests
-        run: make test-integration-upstream
+#       - name: Run iOS Integration Tests
+#         run: make test-integration-upstream
 
-  test-tvos-unit:
-    runs-on: macos-latest
-    needs: validate-code
+#   test-tvos-unit:
+#     runs-on: macos-latest
+#     needs: validate-code
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Preboot tvOS Simulator
-        run: |
-          DEVICE_NAME="Apple TV"
-          OS_VERSION="17.2"
-          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
-          SIMLIST=$(xcrun simctl list -j)
-          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
-          if [ -z "$DEVICE_UDID" ]; then
-            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
-            exit 1
-          fi
-          xcrun simctl boot "$DEVICE_UDID"
-        shell: bash
+#       - name: Preboot tvOS Simulator
+#         run: |
+#           DEVICE_NAME="Apple TV"
+#           OS_VERSION="17.2"
+#           ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+#           SIMLIST=$(xcrun simctl list -j)
+#           DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+#           if [ -z "$DEVICE_UDID" ]; then
+#             echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+#             exit 1
+#           fi
+#           xcrun simctl boot "$DEVICE_UDID"
+#         shell: bash
 
-      - name: Run tvOS Unit Tests
-        run: make unit-test-tvos
+#       - name: Run tvOS Unit Tests
+#         run: make unit-test-tvos
 
-  test-tvos-functional:
-    runs-on: macos-latest
-    needs: validate-code
+#   test-tvos-functional:
+#     runs-on: macos-latest
+#     needs: validate-code
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Preboot tvOS Simulator
-        run: |
-          DEVICE_NAME="Apple TV"
-          OS_VERSION="17.2"
-          ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
-          SIMLIST=$(xcrun simctl list -j)
-          DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
-          if [ -z "$DEVICE_UDID" ]; then
-            echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
-            exit 1
-          fi
-          xcrun simctl boot "$DEVICE_UDID"
-        shell: bash
+#       - name: Preboot tvOS Simulator
+#         run: |
+#           DEVICE_NAME="Apple TV"
+#           OS_VERSION="17.2"
+#           ESCAPED_OS_VERSION=$(echo "$OS_VERSION" | tr '.' '-')
+#           SIMLIST=$(xcrun simctl list -j)
+#           DEVICE_UDID=$(echo "$SIMLIST" | jq -r ".devices.\"com.apple.CoreSimulator.SimRuntime.tvOS-${ESCAPED_OS_VERSION}\"[] | select(.name==\"$DEVICE_NAME\").udid")
+#           if [ -z "$DEVICE_UDID" ]; then
+#             echo "ERROR!: UDID not found for $DEVICE_NAME $OS_VERSION"
+#             exit 1
+#           fi
+#           xcrun simctl boot "$DEVICE_UDID"
+#         shell: bash
 
-      - name: Run tvOS Functional Tests
-        run: make functional-test-tvos
+#       - name: Run tvOS Functional Tests
+#         run: make functional-test-tvos
 
-  build_xcframework_and_app:
-    runs-on: macos-latest
-    needs: validate-code
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+#   build_xcframework_and_app:
+#     runs-on: macos-latest
+#     needs: validate-code
+#     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
-      - name: Setup Dependencies
-        uses: ./.github/actions/setup-action
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4.1.7
+#       - name: Setup Dependencies
+#         uses: ./.github/actions/setup-action
 
-      - name: Build XCFramework
-        run: make archive
+#       - name: Build XCFramework
+#         run: make archive
 
-      - name: Build Test App
-        run: make build-app
+#       - name: Build Test App
+#         run: make build-app
