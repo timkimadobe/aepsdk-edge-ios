@@ -27,3 +27,4 @@ jobs:
       branch: ${{ github.event.inputs.branch }}
       libraries: |
         Edge:AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }};
+      secrets: inherit
