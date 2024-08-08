@@ -10,3 +10,9 @@ jobs:
       device_name: "iPhone 15"
       os_version: "17.2"
       github_ref: ${{ github.ref }}
+      run_test_ios_unit: true
+      run_test_ios_functional: false
+      run_test_ios_integration: false
+      run_test_tvos_unit: true
+      run_test_tvos_functional: true
+      run_build_xcframework_and_app: true
