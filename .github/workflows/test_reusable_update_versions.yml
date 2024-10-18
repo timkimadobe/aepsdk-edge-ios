@@ -1,4 +1,4 @@
-name: Update Versions (iOS)
+name: Update Versions
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         required: true
 
       branch:
-        description: 'Branch to be used when updating versions'
+        description: 'The target branch where the version update will be applied and the pull request will be merged into.'
         required: true
 
       core-dependency:
@@ -21,10 +21,10 @@ on:
 
 jobs:
   update-versions:
-    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-reusable-update-versions.yml@ios-reusable-workflows
+    uses: timkimadobe/aepsdk-commons/.github/workflows/versions.yml@version-script-update
     with:
       version: ${{ github.event.inputs.version }}
       branch: ${{ github.event.inputs.branch }}
-      libraries: |
-        Edge:AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }};
+      dependencies: AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }}
+      paths: Package.swift, AEPEdge.podspec, AEPEdge.xcodeproj/project.pbxproj, Sources/EdgeConstants.swift
       # secrets: inherit
