@@ -21,7 +21,7 @@ on:
 
 jobs:
   release:
-    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-reusable-release.yml@release-script-update
+    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@release-script-update
     with:
       tag: ${{ github.event.inputs.tag }}
       run_full_release: ${{ github.event.inputs.run_full_release == 'true' }}
