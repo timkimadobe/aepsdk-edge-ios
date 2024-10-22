@@ -21,7 +21,7 @@ on:
 
 jobs:
   update-versions:
-    uses: adobe/aepsdk-commons/.github/workflows/versions.yml@scripts-1.0.0
+    uses: timkimadobe/aepsdk-commons/.github/workflows/versions.yml@release-script-update
     with:
       version: ${{ github.event.inputs.version }}
       branch: ${{ github.event.inputs.branch }}
