@@ -4,35 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag/version (ex: 5.0.1)'
+        description: 'Existing tag (version) being released (ex: 5.0.1)'
         required: true
-        default: '1.0.0'
 
       run_full_release:
-        description: 'Run full release process ("no" to skip)'
+        description: 'Run full release process: SPM and podspec validation, build artifacts, GH release (`false` to only check podspec version)'
         required: true
-        default: 'yes'
-        type: choice
-        options:
-          - 'yes'
-          - 'no'
+        default: true
+        type: boolean
 
       release_pod:
-        description: 'Release to Cocoapods'
+        description: 'Release to Cocoapods (`false` to skip)'
         required: true
-        default: 'yes'
-        type: choice
-        options:
-          - 'yes'
-          - 'no'
+        default: true
+        type: boolean
 
 jobs:
   release:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-reusable-release.yml@ios-reusable-workflows
     with:
       tag: ${{ github.event.inputs.tag }}
-      run_full_release: ${{ github.event.inputs.run_full_release }}
-      release_pod: ${{ github.event.inputs.release_pod }}
+      run_full_release: ${{ github.event.inputs.run_full_release == 'true' }}
+      release_pod: ${{ github.event.inputs.release_pod == 'true '}}
       library_name: AEPEdge
       scheme_name_xcframework: AEPEdgeXCF
       test_app_ios_scheme: TestAppiOS
