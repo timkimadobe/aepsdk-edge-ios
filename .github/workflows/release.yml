@@ -24,10 +24,6 @@ jobs:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@release-script-update
     with:
       tag: ${{ github.event.inputs.tag }}
-      run_full_release: ${{ github.event.inputs.run_full_release == 'true' }}
-      release_pod: ${{ github.event.inputs.release_pod == 'true '}}
-      library_name: AEPEdge
-      scheme_name_xcframework: AEPEdgeXCF
-      test_app_ios_scheme: TestAppiOS
-      test_app_tvos_scheme: TestApptvOS
+      full_release_extensions: AEPEdge
+      pod_release_extensions: AEPEdge
     secrets: inherit
