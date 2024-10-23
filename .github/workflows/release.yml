@@ -19,11 +19,50 @@ on:
         default: true
         type: boolean
 
+# jobs:
+#   release:
+#     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@release-script-update
+#     env:
+#       FULL_RELEASE_EXTENSIONS: ${{ github.event.inputs.run_full_release == 'true' ? 'AEPEdge' : '' }}
+#       POD_RELEASE_EXTENSIONS: ${{ github.event.inputs.release_pod == 'true' ? 'AEPEdge' : '' }}
+#     with:
+#       tag: ${{ github.event.inputs.tag }}
+#       full_release_extensions: ${{ github.event.inputs.run_full_release == 'true' ? 'AEPEdge' : '' }}
+#       pod_release_extensions: ${{ github.event.inputs.release_pod == 'true' ? 'AEPEdge' : '' }}
+#     secrets: inherit
+
 jobs:
+  set-extensions:
+    runs-on: ubuntu-latest
+    outputs:
+      full_release_extensions: ${{ steps.set-extensions.outputs.full_release_extensions }}
+      pod_release_extensions: ${{ steps.set-extensions.outputs.pod_release_extensions }}
+    steps:
+      - name: Determine Extensions
+        id: set-extensions
+        run: |
+          # Initialize empty variables to hold the extension lists
+          FULL_RELEASE_EXTENSIONS=""
+          POD_RELEASE_EXTENSIONS=""
+
+          # Example logic for determining which extensions to include
+          if [ "${{ github.event.inputs.run_full_release }}" == "true" ]; then
+            FULL_RELEASE_EXTENSIONS="AEPEdge"  # Add more extensions if needed
+          fi
+
+          if [ "${{ github.event.inputs.release_pod }}" == "true" ]; then
+            POD_RELEASE_EXTENSIONS="AEPEdge"  # Add more extensions if needed
+          fi
+
+          # Output the variables to be used in the next job
+          echo "full_release_extensions=$FULL_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
+          echo "pod_release_extensions=$POD_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
+
   release:
+    needs: set-extensions
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@release-script-update
     with:
       tag: ${{ github.event.inputs.tag }}
-      full_release_extensions: AEPEdge
-      pod_release_extensions: AEPEdge
+      full_release_extensions: ${{ needs.set-extensions.outputs.full_release_extensions }}
+      pod_release_extensions: ${{ needs.set-extensions.outputs.pod_release_extensions }}
     secrets: inherit
