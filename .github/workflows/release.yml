@@ -4,94 +4,53 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'tag/version'
+        description: 'The existing tag (version) to be released (ex: 1.2.3).'
         required: true
-        default: '1.0.0'
+        default: ''
 
-      action_tag:
-        description: 'create tag ("no" to skip)'
+      create-github-release:
+        description: 'Create GitHub release using tag (`false` to skip).'
+        type: boolean
         required: true
-        default: 'yes'
+        default: true
 
-      release_AEPEdge:
-        description: 'release AEPEdge to Cocoapods ("no" to skip)'
+      release-AEPEdge:
+        description: 'Release AEPEdge to Cocoapods (`false` to skip).'
         required: true
-        default: 'yes'
+        default: true
+        type: boolean
 
 jobs:
-  release_edge:
-    runs-on: macos-13
+  set-extensions:
+    runs-on: ubuntu-latest
+    outputs:
+      github_release_extensions: ${{ steps.set-extensions.outputs.github_release_extensions }}
+      pod_release_extensions: ${{ steps.set-extensions.outputs.pod_release_extensions }}
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: main
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '15.0.1'
+      - name: Determine Extensions
+        id: set-extensions
+        run: |
+          GITHUB_RELEASE_EXTENSIONS=""
+          POD_RELEASE_EXTENSIONS=""
 
-    - name: Install jq
-      run: brew install jq
+          # Determine which extensions to include for release and publishing pods
+          if [ "${{ github.event.inputs.create-github-release }}" == "true" ]; then
+            GITHUB_RELEASE_EXTENSIONS="AEPEdge"
+          fi
 
-    - name: Install cocoapods
-      run: gem install cocoapods
+          if [ "${{ github.event.inputs.release-AEPEdge }}" == "true" ]; then
+            POD_RELEASE_EXTENSIONS="AEPEdge"
+          fi
 
-    - name: Install xcodegen
-      run: brew install xcodegen
+          # Output the variables to be used in the next job
+          echo "github_release_extensions=$GITHUB_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
+          echo "pod_release_extensions=$POD_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
 
-    - name: Check version in Podspec
-      run: |
-        set -eo pipefail
-        echo Target version: ${{ github.event.inputs.tag }}
-        make check-version VERSION=${{ github.event.inputs.tag }}
-
-    - name: SPM integration test
-      if: ${{ github.event.inputs.action_tag == 'yes' }}
-      run: |
-        set -eo pipefail
-        echo SPM integration test starts:
-        make test-SPM-integration
-
-    - name: podspec file verification
-      if: ${{ github.event.inputs.action_tag == 'yes' }}
-      run: |
-        set -eo pipefail
-        echo podspec file verification starts:
-        make test-podspec
-        
-    - name: Build Artifacts
-      if: ${{ github.event.inputs.action_tag == 'yes' }}
-      run: |
-        make archive
-        make zip
-
-    - name: Create GH Release
-      id: create_release
-      uses: release-drafter/release-drafter@v5
-      if: ${{ github.event.inputs.action_tag == 'yes' }}
-      with:
-        name: v${{ github.event.inputs.tag }}
-        tag: ${{ github.event.inputs.tag }}
-        version: ${{ github.event.inputs.tag }}
-        publish: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload - AEPEdge
-      uses: actions/upload-release-asset@v1
-      if: ${{ github.event.inputs.action_tag == 'yes' }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/AEPEdge.xcframework.zip
-        asset_name: AEPEdge-${{ github.event.inputs.tag }}.xcframework.zip
-        asset_content_type: application/zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish Pods - AEPEdge
-      if: ${{ github.event.inputs.release_AEPEdge == 'yes' }}
-      run: |
-        set -eo pipefail
-        pod trunk push AEPEdge.podspec --allow-warnings --synchronous
-        pod repo update
-      env:
-        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+  release:
+    needs: set-extensions
+    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
+    with:
+      tag: ${{ github.event.inputs.tag }}
+      github_release_extensions: ${{ needs.set-extensions.outputs.github_release_extensions }}
+      pod_release_extensions: ${{ needs.set-extensions.outputs.pod_release_extensions }}
+    secrets: inherit
