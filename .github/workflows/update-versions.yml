@@ -5,19 +5,27 @@ on:
     inputs:
       version:
         description: 'The new version to use for the extension (ex: 1.2.3).'
+        type: string
         required: true
+        default: ''
 
       branch:
         description: 'The target branch where the version update will be applied and the pull request will be merged into.'
+        type: string
         required: true
+        default: ''
 
       core-dependency:
         description: 'If a version is provided, update AEPCore dependency in podspec and Package.swift.'
+        type: string
         required: false
+        default: ''
 
       edge-identity-dependency:
         description: 'If a version is provided, update AEPEdgeIdentity dependency in podspec and Package.swift.'
+        type: string
         required: false
+        default: ''
 
 jobs:
   update-versions:

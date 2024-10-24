@@ -5,6 +5,7 @@ on:
     inputs:
       tag:
         description: 'The existing tag (version) to be released (ex: 1.2.3).'
+        type: string
         required: true
         default: ''
 
