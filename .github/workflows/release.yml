@@ -17,9 +17,9 @@ on:
 
       release-AEPEdge:
         description: 'Release AEPEdge to Cocoapods (`false` to skip).'
+        type: boolean
         required: true
         default: true
-        type: boolean
 
 jobs:
   set-extensions:
