@@ -49,7 +49,7 @@ jobs:
 
   release:
     needs: set-extensions
-    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
+    uses: adobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
       full_release_extensions: ${{ needs.set-extensions.outputs.full_release_extensions }}

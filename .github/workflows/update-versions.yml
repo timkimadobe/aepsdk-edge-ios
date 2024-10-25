@@ -29,7 +29,7 @@ on:
 
 jobs:
   update-versions:
-    uses: timkimadobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-1.0.0
+    uses: adobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-1.0.0
     with:
       version: ${{ github.event.inputs.version }}
       branch: ${{ github.event.inputs.branch }}
