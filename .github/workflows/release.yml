@@ -21,14 +21,11 @@ on:
         required: true
         default: true
 
-env:
-  EXTENSION: 'AEPEdge'
-
 jobs:
   release:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
-      full-release-extensions: ${{ github.event.inputs.create-github-release && env.EXTENSION || '' }}
-      pod-release-extensions: ${{ github.event.inputs.release-AEPEdge && env.EXTENSION || '' }}
+      full-release-extensions: ${{ github.event.inputs.create-github-release == 'true' && 'AEPEdge' || '' }}
+      pod-release-extensions: ${{ github.event.inputs.release-AEPEdge == 'true' && 'AEPEdge' || '' }}
     secrets: inherit
