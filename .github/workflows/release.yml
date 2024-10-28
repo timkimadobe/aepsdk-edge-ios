@@ -26,7 +26,7 @@ env:
 
 jobs:
   release:
-    uses: adobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
+    uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
       full-release-extensions: ${{ github.event.inputs.create-github-release && env.EXTENSION || '' }}
