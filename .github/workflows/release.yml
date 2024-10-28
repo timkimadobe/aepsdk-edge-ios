@@ -21,37 +21,14 @@ on:
         required: true
         default: true
 
+env:
+  EXTENSION: 'AEPEdge'
+
 jobs:
-  set-extensions:
-    runs-on: ubuntu-latest
-    outputs:
-      full_release_extensions: ${{ steps.set-extensions.outputs.full_release_extensions }}
-      pod_release_extensions: ${{ steps.set-extensions.outputs.pod_release_extensions }}
-    steps:
-      - name: Determine Extensions
-        id: set-extensions
-        run: |
-          FULL_RELEASE_EXTENSIONS=""
-          POD_RELEASE_EXTENSIONS=""
-
-          # Determine which extensions to include for release and publishing pods
-          if [ "${{ github.event.inputs.create-github-release }}" == "true" ]; then
-            FULL_RELEASE_EXTENSIONS="AEPEdge"
-          fi
-
-          if [ "${{ github.event.inputs.release-AEPEdge }}" == "true" ]; then
-            POD_RELEASE_EXTENSIONS="AEPEdge"
-          fi
-
-          # Output the variables to be used in the next job
-          echo "full_release_extensions=$FULL_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
-          echo "pod_release_extensions=$POD_RELEASE_EXTENSIONS" >> $GITHUB_OUTPUT
-
   release:
-    needs: set-extensions
     uses: adobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
-      full_release_extensions: ${{ needs.set-extensions.outputs.full_release_extensions }}
-      pod_release_extensions: ${{ needs.set-extensions.outputs.pod_release_extensions }}
+      full-release-extensions: ${{ github.event.inputs.create-github-release && env.EXTENSION || '' }}
+      pod-release-extensions: ${{ github.event.inputs.release-AEPEdge && env.EXTENSION || '' }}
     secrets: inherit
