@@ -4,19 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'The existing tag (version) to be released (ex: 1.2.3).'
+        description: 'The tag (version) to be released (ex: 1.2.3).'
         type: string
         required: true
         default: ''
 
       create-github-release:
-        description: 'Create GitHub release using tag (`false` to skip).'
+        description: 'Create a GitHub release with uploaded artifacts. If the provided `tag` does not exist, it will be created.'
         type: boolean
         required: true
         default: true
 
-      release-AEPEdge:
-        description: 'Release AEPEdge to Cocoapods (`false` to skip).'
+      pod-publish-extensions:
+        description: 'Publish AEPEdge to Cocoapods.'
         type: boolean
         required: true
         default: true
@@ -26,6 +26,6 @@ jobs:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
-      full-release-extensions: ${{ github.event.inputs.create-github-release == 'true' && 'AEPEdge' || '' }}
-      pod-release-extensions: ${{ github.event.inputs.release-AEPEdge == 'true' && 'AEPEdge' || '' }}
+      create-github-release: ${{ github.event.inputs.create-github-release == 'true' && 'AEPEdge' || '' }}
+      pod-publish-extensions: ${{ github.event.inputs.pod-publish-extensions == 'true' && 'AEPEdge' || '' }}
     secrets: inherit
