@@ -29,6 +29,9 @@ on:
 
 jobs:
   update-versions:
+    permissions:
+      contents: write
+      pull-requests: write
     # @<workflow-version-tag> refers to the tag (version) of the reusable workflow in the aepsdk-commons repository.
     # When updating the tag here, the `workflow_tag` input to the workflow must match this value.
     uses: adobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-1.0.0

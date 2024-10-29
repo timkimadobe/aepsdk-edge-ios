@@ -23,6 +23,8 @@ on:
 
 jobs:
   release:
+    permissions:
+        contents: write
     uses: adobe/aepsdk-commons/.github/workflows/ios-release.yml@gha-ios-1.0.0
     with:
       tag: ${{ github.event.inputs.tag }}
