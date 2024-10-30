@@ -27,12 +27,6 @@ on:
         required: false
         default: ''
 
-      update:
-        description: 'Update version. (unchecked will validate versions instead)'
-        type: boolean
-        required: true
-        default: false
-
 jobs:
   update-versions:
     permissions:
@@ -40,11 +34,11 @@ jobs:
       pull-requests: write
     # @<workflow-version-tag> refers to the tag (version) of the reusable workflow in the aepsdk-commons repository.
     # When updating the tag here, the `workflow_tag` input to the workflow must match this value.
-    uses: timkimadobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-1.0.0
+    uses: adobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-1.0.0
     with:
       version: ${{ github.event.inputs.version }}
       branch: ${{ github.event.inputs.branch }}
       dependencies: AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }}
       paths: Package.swift:swift_spm, AEPEdge.podspec, AEPEdge.xcodeproj/project.pbxproj, Sources/EdgeConstants.swift
-      update: ${{ github.event.inputs.update == 'true' }}
+      update: true
       workflow_tag: gha-ios-1.0.0 # This tag must match the tag used for the reusable workflow.
