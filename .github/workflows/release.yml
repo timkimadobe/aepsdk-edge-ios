@@ -7,7 +7,6 @@ on:
         description: 'The tag (version) to be released (ex: 1.2.3).'
         type: string
         required: true
-        default: ''
 
       create-github-release:
         description: 'Create a GitHub release with uploaded artifacts. If the provided `tag` does not exist, it will be created.'
