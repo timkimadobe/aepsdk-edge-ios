@@ -30,5 +30,4 @@ jobs:
       create-github-release: ${{ github.event.inputs.create-github-release == 'true' && 'AEPEdge' || '' }}
       pod-publish-extensions: ${{ github.event.inputs.pod-publish-extensions == 'true' && 'AEPEdge' || '' }}
       version-validation-paths: AEPEdge.podspec, Sources/EdgeConstants.swift, AEPEdge.xcodeproj/project.pbxproj
-      workflow_tag: gha-ios-1.0.0
     secrets: inherit

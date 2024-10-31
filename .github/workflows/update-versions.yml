@@ -39,4 +39,3 @@ jobs:
       dependencies: AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }}
       paths: Package.swift:swift_spm, AEPEdge.podspec, AEPEdge.xcodeproj/project.pbxproj, Sources/EdgeConstants.swift
       update: true
-      workflow_tag: gha-ios-1.0.0 # This tag must match the tag used for the reusable workflow.
