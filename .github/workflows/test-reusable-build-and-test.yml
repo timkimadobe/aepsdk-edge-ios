@@ -7,8 +7,8 @@ jobs:
   call-reusable-workflow:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@ios-circleci-to-github
     with:
-      device-names: '["iPhone 15", "iPhone 15 Pro"]'
-      os-versions: '["18.0", "18.1"]'
+      ios-device-names: '["iPhone 15", "iPhone 15 Pro"]'
+      ios-versions: '["18.0", "18.1"]'
       run-test-ios-unit: true
       run-test-ios-functional: false
       run-test-ios-integration: false
