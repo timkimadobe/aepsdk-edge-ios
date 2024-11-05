@@ -7,7 +7,7 @@ jobs:
   call-reusable-workflow:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@gha-1.0.0
     with:
-      device-names: '["iPhone 16", "iPhone 16 Pro"]'
+      device-names: '["iPhone 15", "iPhone 15 Pro"]'
       os-versions: '["18.0", "18.1"]'
       run-test-ios-unit: true
       run-test-ios-functional: false
