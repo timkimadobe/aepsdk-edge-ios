@@ -15,7 +15,7 @@ TVOS_ARCHIVE_PATH = $(CURR_DIR)/build/tvos.xcarchive/Products/Library/Frameworks
 TVOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/tvos.xcarchive/dSYMs/
 
 # Values with defaults
-IOS_DEVICE_NAME ?= iPhone 16
+IOS_DEVICE_NAME ?= iPhone 15
 # If OS version is not specified, uses the first device name match in the list of available simulators
 IOS_VERSION ?= 
 ifeq ($(strip $(IOS_VERSION)),)
