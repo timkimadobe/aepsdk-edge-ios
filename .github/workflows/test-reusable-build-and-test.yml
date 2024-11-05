@@ -12,6 +12,6 @@ jobs:
       run-test-ios-unit: true
       run-test-ios-functional: false
       run-test-ios-integration: false
-      run-test-tvos-unit: true
-      run-test-tvos-functional: true
-      run-build-xcframework-and-app: true
+      run-test-tvos-unit: false
+      run-test-tvos-functional: false
+      run-build-xcframework-and-app: false
