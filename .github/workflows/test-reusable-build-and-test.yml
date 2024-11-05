@@ -7,12 +7,11 @@ jobs:
   call-reusable-workflow:
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@gha-1.0.0
     with:
-      device_name: "iPhone 15"
-      os_version: "17.2"
-      github_ref: ${{ github.ref }}
-      run_test_ios_unit: true
-      run_test_ios_functional: false
-      run_test_ios_integration: false
-      run_test_tvos_unit: true
-      run_test_tvos_functional: true
-      run_build_xcframework_and_app: true
+      device-name: "iPhone 16"
+      os-version: "18.0"
+      run-test-ios-unit: true
+      run-test-ios-functional: false
+      run-test-ios-integration: false
+      run-test-tvos-unit: true
+      run-test-tvos-functional: true
+      run-build-xcframework-and-app: true
