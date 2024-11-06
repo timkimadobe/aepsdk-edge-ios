@@ -1,6 +1,36 @@
 codecov:
   notify:
     require_ci_to_pass: yes
+  flags:
+    ios_unit:
+      name: "iOS Unit Tests"
+      paths:
+        - "build/reports/iosUnitResults.xcresult"
+    # ios_functional:
+    #   name: "iOS Functional Tests"
+    #   paths:
+    #     - "coverage/ios-functional.xml"
+    # ios_integration:
+    #   name: "iOS Integration Tests"
+    #   paths:
+    #     - "coverage/ios-integration.xml"
+    # tvos_unit:
+    #   name: "tvOS Unit Tests"
+    #   paths:
+    #     - "coverage/tvos-unit.xml"
+    # tvos_functional:
+    #   name: "tvOS Functional Tests"
+    #   paths:
+    #     - "coverage/tvos-functional.xml"
+    # tvos_integration:
+    #   name: "tvOS Integration Tests"
+    #   paths:
+    #     - "coverage/tvos-integration.xml"
+    # xcframework_app:
+    #   name: "XCFramework and App Build"
+    #   paths:
+    #     - "coverage/xcframework-app.xml"
+
 
 coverage:
   precision: 2
