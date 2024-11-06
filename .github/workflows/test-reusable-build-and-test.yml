@@ -4,7 +4,8 @@ on:
   pull_request:
 
 jobs:
-  call-reusable-workflow:
+  build-and-test:
+    name: Build and Test (iOS)
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@ios-circleci-to-github
     with:
       ios-device-names: '["iPhone 15", "iPhone 15 Pro"]'
