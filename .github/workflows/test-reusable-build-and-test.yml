@@ -1,11 +1,11 @@
-name: Build and Test (iOS)
+name: Build and Test
 
 on:
   pull_request:
 
 jobs:
   build-and-test:
-    name: Build and Test (iOS)
+    name: " "
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@ios-circleci-to-github
     with:
       ios-device-names: '["iPhone 15", "iPhone 15 Pro"]'
