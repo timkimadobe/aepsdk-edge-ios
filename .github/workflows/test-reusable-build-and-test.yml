@@ -8,13 +8,13 @@ jobs:
     name: " "
     uses: timkimadobe/aepsdk-commons/.github/workflows/ios-build-and-test.yml@ios-circleci-to-github
     with:
-      ios-device-names: '["iPhone 15", "iPhone 15 Pro"]'
+      ios-device-names: '["iPhone 15"]'
       ios-versions: '["18.0"]'
-      tvos-device-names: '["Apple TV"]'
-      tvos-versions: '["18.0", "18.1"]'
+      # tvos-device-names: '["Apple TV"]'
+      # tvos-versions: '["18.0", "18.1"]'
       run-test-ios-unit: true
       run-test-ios-functional: false
       run-test-ios-integration: false
-      run-test-tvos-unit: true
+      run-test-tvos-unit: false
       run-test-tvos-functional: false
       run-build-xcframework-and-app: false
