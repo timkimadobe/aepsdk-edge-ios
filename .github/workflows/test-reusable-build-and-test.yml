@@ -18,3 +18,4 @@ jobs:
       run-test-tvos-unit: false
       run-test-tvos-functional: false
       run-build-xcframework-and-app: false
+    secrets: inherit
