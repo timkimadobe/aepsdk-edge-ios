@@ -149,15 +149,8 @@ lint-autocorrect:
 lint:
 	./Pods/SwiftLint/swiftlint lint Sources TestApps
 
-# make check-version VERSION=5.0.0
-check-version:
-	sh ./Script/version.sh $(VERSION)
-
 test-SPM-integration:
 	sh ./Script/test-SPM.sh
 
 test-podspec:
 	sh ./Script/test-podspec.sh
-
-test-version-update:
-	sh ./Script/update-versions.sh -n Edge -v 9.9.9
