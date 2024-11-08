@@ -1,0 +1,39 @@
+name: Update Versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The new version to use for the extension (ex: 1.2.3).'
+        type: string
+        required: true
+
+      branch:
+        description: 'The target branch where the version update will be applied and the pull request will be merged into.'
+        type: string
+        required: true
+
+      core-dependency:
+        description: 'If a version is provided, update AEPCore dependency in podspec and Package.swift.'
+        type: string
+        required: false
+        default: ''
+
+      edge-identity-dependency:
+        description: 'If a version is provided, update AEPEdgeIdentity dependency in podspec and Package.swift.'
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  update-versions:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: adobe/aepsdk-commons/.github/workflows/versions.yml@gha-ios-5.0.0
+    with:
+      version: ${{ github.event.inputs.version }}
+      branch: ${{ github.event.inputs.branch }}
+      dependencies: AEPCore ${{ github.event.inputs.core-dependency }}, AEPEdgeIdentity ${{ github.event.inputs.edge-identity-dependency }}
+      paths: Package.swift:swift_spm, AEPEdge.podspec, AEPEdge.xcodeproj/project.pbxproj, Sources/EdgeConstants.swift
+      update: true
