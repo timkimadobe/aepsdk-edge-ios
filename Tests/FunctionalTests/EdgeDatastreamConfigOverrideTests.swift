@@ -21,7 +21,7 @@ import XCTest
 // swiftlint:disable type_body_length
 /// Functional tests for the sendEvent API with datastreamIdOverride and datastreamConfigOverride features
 class AEPEdgeDatastreamOverrideTests: TestBase, AnyCodableAsserts {
-    private let TIMEOUT_SEC: TimeInterval = 2
+    private let TIMEOUT_SEC: TimeInterval = FunctionalTestConstants.Defaults.TIMEOUT_SEC
     private let exEdgeInteractProdUrl = URL(string: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR)! // swiftlint:disable:this force_unwrapping
     private let responseBody = "{\"test\": \"json\"}"
 #if os(iOS)
@@ -111,8 +111,8 @@ class AEPEdgeDatastreamOverrideTests: TestBase, AnyCodableAsserts {
         Edge.sendEvent(experienceEvent: experienceEvent)
 
         // verify
-        mockNetworkService.assertAllNetworkRequestExpectations()
-        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post)
+        mockNetworkService.assertAllNetworkRequestExpectations(timeout: TIMEOUT_SEC)
+        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post, timeout: TIMEOUT_SEC)
 
         // Validate URL
         let requestUrl = resultNetworkRequests[0].url
@@ -185,8 +185,8 @@ class AEPEdgeDatastreamOverrideTests: TestBase, AnyCodableAsserts {
         Edge.sendEvent(experienceEvent: experienceEvent)
 
         // verify
-        mockNetworkService.assertAllNetworkRequestExpectations()
-        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post)
+        mockNetworkService.assertAllNetworkRequestExpectations(timeout: TIMEOUT_SEC)
+        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post, timeout: TIMEOUT_SEC)
 
         // Validate URL
         let requestUrl = resultNetworkRequests[0].url
@@ -235,8 +235,8 @@ class AEPEdgeDatastreamOverrideTests: TestBase, AnyCodableAsserts {
         Edge.sendEvent(experienceEvent: experienceEvent)
 
         // verify
-        mockNetworkService.assertAllNetworkRequestExpectations()
-        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post)
+        mockNetworkService.assertAllNetworkRequestExpectations(timeout: TIMEOUT_SEC)
+        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post, timeout: TIMEOUT_SEC)
 
         // Valdiate URL
         let requestUrl = resultNetworkRequests[0].url

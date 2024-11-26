@@ -20,7 +20,7 @@ import XCTest
 
 /// End-to-end testing for the AEPEdge public APIs with completion handlers
 class CompletionHandlerFunctionalTests: TestBase, AnyCodableAsserts {
-    private let TIMEOUT_SEC: TimeInterval = 2
+    private let TIMEOUT_SEC: TimeInterval = FunctionalTestConstants.Defaults.TIMEOUT_SEC
     private let event1 = Event(name: "e1", type: "eventType", source: "eventSource", data: nil)
     private let event2 = Event(name: "e2", type: "eventType", source: "eventSource", data: nil)
     private let responseBody = "{\"test\": \"json\"}"
@@ -85,7 +85,7 @@ class CompletionHandlerFunctionalTests: TestBase, AnyCodableAsserts {
         mockNetworkService.assertAllNetworkRequestExpectations()
         wait(for: [expectation], timeout: TIMEOUT_SEC)
 
-        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post)
+        let resultNetworkRequests = mockNetworkService.getNetworkRequestsWith(url: TestConstants.EX_EDGE_INTERACT_PROD_URL_STR, httpMethod: HttpMethod.post, timeout: TIMEOUT_SEC)
         XCTAssertEqual(1, resultNetworkRequests.count)
         XCTAssertEqual(1, receivedHandles.count)
 
