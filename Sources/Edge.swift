@@ -63,7 +63,7 @@ public class Edge: NSObject, Extension {
                          listener: handleIdentitiesReset)
         registerListener(type: EventType.edge,
                          source: EventSource.requestReset,
-                         listener: handleIdentitiesReset)
+                         listener: handleEdgeIdentitiesReset)
     }
 
     public func onUnregistered() {
