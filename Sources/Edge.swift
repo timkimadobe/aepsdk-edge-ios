@@ -176,7 +176,7 @@ public class Edge: NSObject, Extension {
     }
 
     func handleEdgeIdentitiesReset(_ event: Event) {
-        Log.trace(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Handling Edge identity reset (state store) request: '\(event.id.uuidString)'.")
+        Log.trace(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Handling Edge identity reset (state store) request: '\(event.id.uuidString)'. Using event timestamp: \(event.timestamp)")
         networkResponseHandler?.setLastReset(date: event.timestamp)
         let responseEvent = event.createResponseEvent(name: "Edge Reset Identities (State Store) Response",
                                                       type: EventType.edge,

@@ -404,9 +404,13 @@ class NetworkResponseHandler {
     /// - Returns: true if we should ignore store payload responses for `requestId`
     private func shouldIgnoreStorePayload(requestId: String) -> Bool {
         if let firstEvent = sentEventsWaitingResponse[requestId]?.first {
+            Log.trace(label: LOG_TAG, "shouldIgnoreStorePayload - firstEvent: \(firstEvent)")
+            Log.trace(label: LOG_TAG, "firstEvent.timestamp: \(firstEvent.timestamp)")
+            Log.trace(label: LOG_TAG, "lastResetDate.value: \(lastResetDate.value)")
+            Log.trace(label: LOG_TAG, "firstEvent.timestamp < lastResetDate.value: \(firstEvent.timestamp < lastResetDate.value)")
             return firstEvent.timestamp < lastResetDate.value
         }
-
+        Log.trace(label: LOG_TAG, "shouldIgnoreStorePayload - FALSE")
         return false
     }
 
