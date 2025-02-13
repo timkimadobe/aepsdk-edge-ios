@@ -61,6 +61,9 @@ public class Edge: NSObject, Extension {
         registerListener(type: EventType.genericIdentity,
                          source: EventSource.requestReset,
                          listener: handleIdentitiesReset)
+        registerListener(type: EventType.edge,
+                         source: EventSource.requestReset,
+                         listener: handleIdentitiesReset)
     }
 
     public func onUnregistered() {
@@ -170,6 +173,16 @@ public class Edge: NSObject, Extension {
         let entity = DataEntity(uniqueIdentifier: event.id.uuidString, timestamp: event.timestamp, data: entityData)
         networkResponseHandler?.setLastReset(date: event.timestamp)
         state?.hitQueue.queue(entity: entity)
+    }
+
+    func handleEdgeIdentitiesReset(_ event: Event) {
+        Log.trace(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Handling Edge identity reset (state store) request: '\(event.id.uuidString)'.")
+        networkResponseHandler?.setLastReset(date: event.timestamp)
+        let responseEvent = event.createResponseEvent(name: "Edge Reset Identities (State Store) Response",
+                                                      type: EventType.edge,
+                                                      source: EventSource.resetComplete,
+                                                      data: nil)
+        dispatch(event: responseEvent)
     }
 
     func handleRequestLocationHint(_ event: Event) {
