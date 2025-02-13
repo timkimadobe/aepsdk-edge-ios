@@ -177,7 +177,19 @@ public class Edge: NSObject, Extension {
 
     func handleEdgeIdentitiesReset(_ event: Event) {
         Log.trace(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Handling Edge identity reset (state store) request: '\(event.id.uuidString)'. Using event timestamp: \(event.timestamp)")
+
+        let edgeEntity = EdgeDataEntity(event: event, configuration: [:], identityMap: [:])
+
+        guard let entityData = try? JSONEncoder().encode(edgeEntity) else {
+            Log.debug(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Failed to encode EdgeDataEntity for event with id: '\(event.id.uuidString)'.")
+            return
+        }
+
+        let entity = DataEntity(uniqueIdentifier: event.id.uuidString, timestamp: event.timestamp, data: entityData)
+
         networkResponseHandler?.setLastReset(date: event.timestamp)
+        state?.hitQueue.queue(entity: entity)
+
         let responseEvent = event.createResponseEvent(name: "Edge Reset Identities (State Store) Response",
                                                       type: EventType.edge,
                                                       source: EventSource.resetComplete,

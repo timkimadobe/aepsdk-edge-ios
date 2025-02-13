@@ -28,7 +28,7 @@ extension Event {
 
     /// Returns true if this `Event` has `EventType.genericIdentity` and `EventSource.requestReset`, otherwise false
     var isResetIdentitiesEvent: Bool {
-        return type == EventType.genericIdentity && source == EventSource.requestReset
+        return (type == EventType.genericIdentity && source == EventSource.requestReset) || (type == EventType.edge && source == EventSource.requestReset)
     }
 
     /// Returns the dictionary of extracted config from event data which contains datastreamIdOverride and datastreamConfigOverride details.

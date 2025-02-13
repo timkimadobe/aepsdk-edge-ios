@@ -93,6 +93,7 @@ class EdgeHitProcessor: HitProcessing {
             processConsentEvents(entityId: entity.uniqueIdentifier, event: event, edgeConfig: edgeConfig, requestBuilder: requestBuilder, completion: completion)
         } else if event.isResetIdentitiesEvent {
             // reset stored payloads as part of processing the reset hit
+            Log.trace(label: EdgeConstants.LOG_TAG, "\(SELF_TAG) - Resetting all store payloads.")
             let storeResponsePayloadManager = StoreResponsePayloadManager(EdgeConstants.DataStoreKeys.STORE_NAME)
             storeResponsePayloadManager.deleteAllStorePayloads()
             completion(true)
