@@ -22,7 +22,7 @@ on:
         type: string
       create-new-branch:
         description: 'Create a new branch from main instead of merging main into the dev branch. Default is false.'
-        required: false
+        required: true
         default: false
         type: boolean
   push:
@@ -39,6 +39,6 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
     uses: timkimadobe/aepsdk-commons/.github/workflows/downmerge-to-dev.yml@downmerge-workflow
     with:
-      dev-branch-name: ${{ inputs.dev-branch-name || 'dev' }}
-      create-new-branch: ${{ inputs.create-new-branch == 'true' }}
+      dev-branch-name: ${{ github.event.inputs.dev-branch-name || 'dev' }}
+      create-new-branch: ${{ github.event.inputs.create-new-branch == 'true' }}
       
