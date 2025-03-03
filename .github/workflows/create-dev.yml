@@ -10,7 +10,7 @@
 # governing permissions and limitations under the License.
 #
 
-name: Auto downmerge to dev
+name: Create dev branch
 
 on:
   workflow_dispatch:
