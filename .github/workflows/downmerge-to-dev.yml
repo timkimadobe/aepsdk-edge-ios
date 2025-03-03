@@ -13,18 +13,6 @@
 name: Auto downmerge to dev
 
 on:
-  workflow_dispatch:
-    inputs:
-      dev-branch-name:
-        description: 'Branch to receive changes from main. Default is "dev".'
-        required: false
-        default: 'dev'
-        type: string
-      create-new-branch:
-        description: 'Create a new branch from main instead of merging main into the dev branch. Default is false.'
-        required: true
-        default: false
-        type: boolean
   push:
     branches:
       - main
@@ -38,7 +26,4 @@ jobs:
   call-downmerge:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
     uses: timkimadobe/aepsdk-commons/.github/workflows/downmerge-to-dev.yml@downmerge-workflow
-    with:
-      dev-branch-name: ${{ github.event.inputs.dev-branch-name || 'dev' }}
-      create-new-branch: ${{ github.event.inputs.create-new-branch == 'true' }}
       
