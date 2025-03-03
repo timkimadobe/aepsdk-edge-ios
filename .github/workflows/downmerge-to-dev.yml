@@ -10,14 +10,20 @@
 # governing permissions and limitations under the License.
 #
 
-name: Auto downmerge to `dev`
+name: Auto downmerge to dev
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   call-downmerge:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
     uses: timkimadobe/aepsdk-commons/.github/workflows/downmerge-to-dev.yml@downmerge-workflow
