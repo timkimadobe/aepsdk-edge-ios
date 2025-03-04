@@ -10,9 +10,23 @@
 # governing permissions and limitations under the License.
 #
 
-name: Auto downmerge to dev
+name: Downmerge or create dev branch
 
 on:
+  workflow_dispatch:
+    inputs:
+      dev-branch-name:
+        description: 'Branch to receive changes from main. Default is "dev".'
+        required: false
+        default: 'dev'
+        type: string
+      create-new-branch:
+        description: 'Create a new branch from main instead of merging main into the dev branch. Default is false.'
+        required: true
+        default: false
+        type: boolean
+  
+  # Automatic triggers
   push:
     branches:
       - main
@@ -24,6 +38,12 @@ on:
 
 jobs:
   call-downmerge:
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
+    # Only run on push events, or on pull_request events when the PR was merged,
+    # or when manually triggered via workflow_dispatch
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) }}
     uses: timkimadobe/aepsdk-commons/.github/workflows/downmerge-to-dev.yml@downmerge-workflow
-      
+    with:
+      # For workflow_dispatch, use the provided inputs
+      # For push and pull_request events, use default values (update these values if needed).
+      dev-branch-name: ${{ github.event.inputs.dev-branch-name || 'dev' }}
+      create-new-branch: ${{ github.event.inputs.create-new-branch == 'true' || false }} 
